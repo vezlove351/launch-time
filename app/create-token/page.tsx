@@ -55,7 +55,15 @@ export default function CreateTokenPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#2A2F4E] to-[#1A2435] flex flex-col">
-      <Header />
+    
+      <Header>
+        {({ selectedNetwork }) => (
+          <div className="text-white text-sm">
+        Selected Network: {selectedNetwork.name}
+          </div>
+        )}
+      </Header>
+      
       <main className="flex-grow container px-4 mx-auto max-w-6xl py-16">
         <h1 className="text-4xl font-bold text-white mb-8">Create Your Meme</h1>
         <div className="flex flex-col lg:flex-row gap-8">
