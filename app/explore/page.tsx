@@ -162,11 +162,10 @@ export default function ExplorePage() {
   }
 
   return (
-    <div className={`min-h-screen flex flex-col ${
-      theme === 'dark' 
-        ? 'bg-gradient-to-br from-[#2A2F4E] to-[#1A2435] text-white' 
-        : 'bg-gradient-to-br from-[#F0F4F8] to-[#D9E2EC] text-gray-900'
-    }`}>      <Header />
+    <div className="min-h-screen bg-gradient-to-br from-[#2A2F4E] to-[#1A2435] flex flex-col">
+      <Header>
+        {({ selectedNetwork }) => null}
+      </Header>
       <main className="flex-grow container px-4 mx-auto max-w-6xl py-16">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-4 md:mb-0">Community tokens</h1>

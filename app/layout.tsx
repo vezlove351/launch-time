@@ -1,7 +1,8 @@
 import "./globals.css"
 import { Outfit } from 'next/font/google'
 import { ThirdwebProvider } from "thirdweb/react"
-import { ThemeProvider } from "@/contexts/ThemeContext"
+import { ThemeProvider } from "@/context/ThemeContext"
+
 
 
 const outfit = Outfit({ subsets: ["latin"] })
@@ -18,10 +19,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <ThirdwebProvider >
-      <ThemeProvider>
-      <body className={outfit.className}>{children}</body>
-      </ThemeProvider>
+       <ThirdwebProvider>
+        <ThemeProvider>
+          <body className={`${outfit.className} transition-colors duration-300`}>
+            {children}
+          </body>
+        </ThemeProvider>
       </ThirdwebProvider>
       
     </html>
