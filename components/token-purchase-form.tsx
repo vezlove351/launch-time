@@ -105,4 +105,3 @@ export function TokenPurchaseForm({ tokenSymbol, tokenAddress, totalSupply }: To
     </form>
   )
 }
-

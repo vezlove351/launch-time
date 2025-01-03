@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ethers, BrowserProvider } from 'ethers'
+import { ethers } from 'ethers'
 import { TokenGrid }  from "@/components/token-grid"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button"
 import { Sparkles, Flame, TrendingUp, Wallet } from 'lucide-react'
 import { factoryAbi } from '@/utils/abis/factoryAbi'
 import { useToast } from "@/hooks/use-toast"
+import { useTheme } from "@/contexts/ThemeContext"
 
-// Assuming this is the Token interface from your token-grid
 interface Token {
   name: string;
   symbol: string;
@@ -42,7 +42,7 @@ function useAddress() {
   useEffect(() => {
     async function getAddress() {
       if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
-        const provider = new BrowserProvider(window.ethereum)
+        const provider = new ethers.BrowserProvider(window.ethereum)
         try {
           const accounts = await provider.send('eth_requestAccounts', [])
           setAddress(accounts[0])
@@ -66,6 +66,7 @@ export default function ExplorePage() {
   const [error, setError] = useState<string | null>(null)
   const { toast } = useToast()
   const address = useAddress()
+  const { theme } = useTheme()
 
   useEffect(() => {
     const fetchMemeTokens = async () => {
@@ -148,9 +149,24 @@ export default function ExplorePage() {
     setFilteredTokens(filtered)
   }, [searchTerm, tokens, activeFilter, address])
 
+  const handleFilterClick = (filter: FilterType) => {
+    if (filter === 'myTokens' && !address) {
+      toast({
+        title: "Wallet Not Connected",
+        description: "Please connect your wallet to view your tokens.",
+        variant: "destructive",
+      })
+      return
+    }
+    setActiveFilter(prevFilter => prevFilter === filter ? 'all' : filter)
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#2A2F4E] to-[#1A2435] flex flex-col">
-      <Header />
+    <div className={`min-h-screen flex flex-col ${
+      theme === 'dark' 
+        ? 'bg-gradient-to-br from-[#2A2F4E] to-[#1A2435] text-white' 
+        : 'bg-gradient-to-br from-[#F0F4F8] to-[#D9E2EC] text-gray-900'
+    }`}>      <Header />
       <main className="flex-grow container px-4 mx-auto max-w-6xl py-16">
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-4 md:mb-0">Community tokens</h1>
@@ -159,19 +175,20 @@ export default function ExplorePage() {
               icon={<Sparkles size={16} />}
               label="New"
               isActive={activeFilter === 'new'}
-              onClick={() => setActiveFilter(prevFilter => prevFilter === 'new' ? 'all' : 'new')}
+              onClick={() => handleFilterClick('new')}
             />
             <FilterButton
               icon={<Flame size={16} />}
               label="Popular"
               isActive={activeFilter === 'popular'}
-              onClick={() => setActiveFilter(prevFilter => prevFilter === 'popular' ? 'all' : 'popular')}
+              onClick={() => handleFilterClick('popular')}
             />
+            <div className="h-9 w-px bg-gray-600 mx-2" />
             <FilterButton
               icon={<Wallet size={16} />}
               label="My Tokens"
               isActive={activeFilter === 'myTokens'}
-              onClick={() => setActiveFilter(prevFilter => prevFilter === 'myTokens' ? 'all' : 'myTokens')}
+              onClick={() => handleFilterClick('myTokens')}
             />
           </div>
         </div>
@@ -201,11 +218,18 @@ interface FilterButtonProps {
 }
 
 function FilterButton({ icon, label, isActive, onClick }: FilterButtonProps) {
+  const { theme } = useTheme()
   return (
     <Button
       variant={isActive ? "default" : "secondary"}
       size="sm"
-      className={`flex items-center space-x-1 ${isActive ? 'bg-[#4F46E5]' : 'bg-gray-700'}`}
+      className={`flex items-center space-x-1 ${
+        isActive 
+          ? 'bg-[#4F46E5] text-white' 
+          : theme === 'dark' 
+            ? 'bg-gray-700 text-white' 
+            : 'bg-gray-200 text-gray-900'
+      }`}
       onClick={onClick}
     >
       {icon}

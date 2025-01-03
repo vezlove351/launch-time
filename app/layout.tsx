@@ -1,6 +1,7 @@
 import "./globals.css"
 import { Outfit } from 'next/font/google'
 import { ThirdwebProvider } from "thirdweb/react"
+import { ThemeProvider } from "@/contexts/ThemeContext"
 
 
 const outfit = Outfit({ subsets: ["latin"] })
@@ -17,8 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <ThirdwebProvider>
+      <ThirdwebProvider >
+      <ThemeProvider>
       <body className={outfit.className}>{children}</body>
+      </ThemeProvider>
       </ThirdwebProvider>
       
     </html>

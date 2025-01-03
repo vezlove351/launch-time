@@ -2,11 +2,14 @@
 
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
-import { Rocket, ChevronDown, Menu } from 'lucide-react'
+import { Rocket, ChevronDown, Menu, Moon, Sun } from 'lucide-react'
 import { client } from "../app/client";
 import { ConnectButton } from "thirdweb/react";
 import { useState, useEffect } from 'react'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
+import { inAppWallet } from "thirdweb/wallets"
+import { sepolia } from "thirdweb/chains"
+import { useTheme } from "@/contexts/ThemeContext"
 
 export function Header() {
   const [isMounted, setIsMounted] = useState(false)
@@ -24,6 +27,8 @@ export function Header() {
   useEffect(() => {
     setIsMounted(true)
   }, [])
+
+  const { theme, toggleTheme } = useTheme()
 
   return (
     <header className="py-4 px-4 md:px-6 bg-gray-900/80">
@@ -132,11 +137,41 @@ export function Header() {
               )}
             </div>
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="text-gray-300 hover:text-white transition-colors"
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
           {isMounted && (
             <div className="hidden md:flex items-center" suppressHydrationWarning>
-              <ConnectButton client={client} />
+              <ConnectButton 
+                client={client} 
+                wallets={[
+                  inAppWallet({
+                    auth:{
+                      options: [
+                        "google",
+                        "x",
+                        "discord",
+                        "wallet",
+                      ]
+                    }
+                  })
+                ]}
+                accountAbstraction={{
+                  chain: sepolia,
+                  sponsorGas: true,
+                }
+                 
+                }
+
+              />
             </div>
           )}
+            
         </div>
       </div>
     </header>

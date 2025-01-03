@@ -3,6 +3,7 @@ import Image from "next/image"
 import { Copy } from 'lucide-react'
 import { useState } from 'react'
 import Link from 'next/link'
+import { useTheme } from "@/contexts/ThemeContext"
 
 interface MemeToken {
   name: string
@@ -15,6 +16,7 @@ interface MemeToken {
 }
 
 export function TokenCard({ token }: { token: MemeToken }) {
+  const { theme } = useTheme()
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const [imgSrc, setImgSrc] = useState(token.tokenImageUrl || '/placeholder.svg')
 
@@ -26,7 +28,11 @@ export function TokenCard({ token }: { token: MemeToken }) {
 
   return (
     <Link href={`/token/${token.tokenAddress}`} passHref>
-      <Card className="p-6 bg-gray-800/50 border-0 rounded-2xl flex flex-col hover:bg-gray-700/50 transition-colors">
+       <Card className={`p-6 ${
+        theme === 'dark' 
+          ? 'bg-gray-800/50 hover:bg-gray-700/50' 
+          : 'bg-white hover:bg-gray-100'
+      } border-0 rounded-2xl flex flex-col transition-colors`}>
         <div className="flex items-center gap-4 mb-4">
           <div className="relative w-12 h-12">
             <Image

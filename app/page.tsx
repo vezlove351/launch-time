@@ -53,23 +53,26 @@ export default function Home() {
           {/* Feature Cards Container */}
           <div className="bg-gray-900/80 rounded-[32px] p-8 mb-16">
             <div className="grid md:grid-cols-3 gap-6">
+              
                <FeatureCard
                 icon={<Wallet className="w-10 h-10 text-pink-400" />}
                 title="Connect your wallet"
                 description="Use metamask with any supported chains"
               />
-              
+              <Link href="/create-token">
                <FeatureCard
                 icon={<Wand2 className="w-10 h-10 text-purple-400" />}
                 title="Create a meme"
                 description="Create meme coin in 1 minute and start trading"
               />
-              
+              </Link>
+              <Link href="/ai-agents">
               <FeatureCard
                 icon={<Key className="w-10 h-10 text-[#4ADE80]" />}
                 title="Promote"
                 description="Use our AI Agents to promote your token"
               />
+               </Link>
              
              
             </div>
